@@ -5,7 +5,6 @@
         <C>4</C>                        <!-- Columnas-->
         <F>1</F>                        <!-- Precio de Operacion por VOLTEAR el azulejo -->
         <S>1</S>                        <!-- Precio de Opreacion por INTERCAMBIAR el azulejo -->
-        
         <patrones>                      <!-- LISTA DE PATRONES-->
             <patron codigo="cod11">
                 BNBNBBBN                <!-- LISTA DE AZULEJOS-->
