@@ -29,6 +29,11 @@ class ListaPisos:
             objeto_nodo.lista_patrones.imprimir()
             print("=====================================")            
             nodo_actual = nodo_actual.siguiente
+        if self.puntero is None:
+            input("\nNo hay pisos cargados"
+                  "\nPresione una tecla para continuar...\n\n")
+        else:
+            input("\nPresione una tecla para continuar...\n\n")
 
     def eliminar(self, valor):
         pass
