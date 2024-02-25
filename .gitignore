@@ -1,0 +1,32 @@
+# Carpeta de entorno virtual
+venv/
+
+# Archivos de caché y compilación
+__pycache__/
+*.py[cod]
+
+# Archivos generados por IDEs y editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de registro y temporales
+*.log
+*.tmp
+
+# Archivos de configuración local
+*.env
+
+# Archivos de dependencias
+pip-lock.txt
+requirements.txt
+
+# Archivos de compilación
+*.pyd
+*.so
+*.o
+
+# Archivos de respaldo
+*~
+*.bak
