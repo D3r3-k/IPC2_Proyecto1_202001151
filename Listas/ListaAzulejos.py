@@ -7,7 +7,7 @@ class ListaAzulejos:
         self.puntero: Nodo = None
 
     def insertar(self, objeto: Azulejo):
-        nuevo_nodo = Nodo(objeto)
+        nuevo_nodo: Nodo = Nodo(objeto)
         if self.puntero is None:
             self.puntero = nuevo_nodo
         else:
@@ -18,10 +18,26 @@ class ListaAzulejos:
 
     def imprimir(self):
         nodo_actual: Nodo = self.puntero
+        texto = ""
         while nodo_actual != None:
             objeto_nodo: Azulejo = nodo_actual.objeto
-            print(f"        Color: {objeto_nodo.color}")
+            texto += f"[{objeto_nodo.color}]"
             nodo_actual = nodo_actual.siguiente
+        print(f"        {texto}")
+
+    def imprimir_patron(self, columnas):
+        nodo_actual: Nodo = self.puntero
+        contador = 0
+        texto = "|   "
+        while nodo_actual != None:
+            objeto_nodo: Azulejo = nodo_actual.objeto
+            if contador == columnas:
+                texto += "\n|   "
+                contador = 0
+            texto += f"[{objeto_nodo.color}]"
+            contador += 1
+            nodo_actual = nodo_actual.siguiente
+        print(texto)
 
     def eliminar(self, valor):
         pass
@@ -34,3 +50,11 @@ class ListaAzulejos:
                 return nodo_actual
             nodo_actual = nodo_actual.siguiente
         return None
+
+    def __len__(self):
+        nodo_actual = self.puntero
+        contador = 0
+        while nodo_actual:
+            contador += 1
+            nodo_actual = nodo_actual.siguiente
+        return contador
