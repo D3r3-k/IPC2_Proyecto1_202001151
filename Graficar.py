@@ -7,7 +7,7 @@ from Clases.Azulejo import Azulejo
 def graficar_patron(Piso: Piso, Patron: Patron):
     try:
         print("Graficando...")
-        dot = graphviz.Digraph(filename=f"{Patron.codigo}.dot", format="pdf", directory="renders")
+        dot = graphviz.Digraph(filename=f"render.dot", format="pdf", directory="renders")
         dot.attr(label=f"Piso: {Piso.nombre} - Patron: {Patron.codigo}", fontname="arial", fontsize="14", labelloc="t", nodesep="0.1", ranksep="0.1")
         indice = 0
         for fila in range(Piso.filas):

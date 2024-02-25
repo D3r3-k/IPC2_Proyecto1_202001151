@@ -17,7 +17,6 @@ piso_seleccionado: Piso = None
 patron_seleccionado: Patron = None
 
 
-
 # FUNCIONES
 
 
@@ -106,7 +105,7 @@ def menu_seleccionar_piso():
                     graficar_patron(piso_seleccionado, patron_seleccionado)
                     pass
                 case "2":
-                    menu_seleccionar_patron()
+                    menu_seleccionar_patron(True)
                     pass
                 case "3":
                     return
@@ -132,15 +131,18 @@ def menu_seleccionar_piso():
             option_piso = int(option_piso)
             match option_piso:
                 case index if index in range(1, len(lista_pisos)+1):
-                    piso_seleccionado = lista_pisos.buscar_indice(option_piso-1).objeto
-                    input(f"\n[✓] Piso seleccionado: {piso_seleccionado.nombre}")
+                    piso_seleccionado = lista_pisos.buscar_indice(
+                        option_piso-1).objeto
+                    input(f"\n[✓] Piso seleccionado: {
+                          piso_seleccionado.nombre}")
                     menu_seleccionar_patron()
                     return
                 case _:
                     input("\n[✗] Opción no valida!"
                           "\nPresione una tecla para continuar...\n\n")
 
-def menu_seleccionar_patron():
+
+def menu_seleccionar_patron(cambiar_patron: bool = False):
     global piso_seleccionado
     global patron_seleccionado
 
@@ -148,7 +150,8 @@ def menu_seleccionar_patron():
         while True:
             limpiar()
             print("|==============[ <PATRONES> ]============|")
-            piso_seleccionado.lista_patrones.listar_patrones(piso_seleccionado.columnas)
+            piso_seleccionado.lista_patrones.listar_patrones(
+                piso_seleccionado.columnas)
             if len(piso_seleccionado.lista_patrones) > 0:
                 print("|========================================|")
                 print("| Presione E para salir                  |")
@@ -163,8 +166,17 @@ def menu_seleccionar_patron():
             option_patron = int(option_patron)
             match option_patron:
                 case index if index in range(1, len(piso_seleccionado.lista_patrones)+1):
-                    patron_seleccionado = piso_seleccionado.lista_patrones.buscar_indice(option_patron-1).objeto
+                    temp_patron = patron_seleccionado
+                    temp_nuevo_patron = piso_seleccionado.lista_patrones.buscar_indice(
+                        option_patron-1).objeto
+                    if temp_nuevo_patron == temp_patron:
+                        input("\n[✗] El patrón seleccionado ya está seleccionado!"
+                              "\nPresione una tecla para continuar...\n\n")
+                        return
+                    patron_seleccionado = temp_nuevo_patron
                     input(f"\n[✓] Patrón seleccionado: {patron_seleccionado.codigo}")
+                    if cambiar_patron:
+                        menu_cambiar_patron(temp_patron, temp_nuevo_patron)
                     return
                 case _:
                     input("\n[✗] Opción no valida!"
@@ -173,11 +185,55 @@ def menu_seleccionar_patron():
         input("\n[✗] No se ha seleccionado un piso!"
               "\nPresione una tecla para continuar...\n\n")
 
+
+def menu_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
+    global piso_seleccionado
+    global patron_seleccionado
+
+    costo = algoritmo_cambiar_patron(patron_viejo, patron_nuevo)
+    while True:
+        limpiar()
+        print("|======[ <CAMBIAR PATRON> ]======|")
+        print(f"| Actual: [{patron_viejo.codigo}]" +
+              " " * (34-13-len(patron_viejo.codigo)) + "|")
+        print(f"| Nuevo: [{patron_nuevo.codigo}]" + " " *
+              (34-12-len(patron_nuevo.codigo)) + "|")
+        print("|================================|")
+        print(f"| Costo mínimo: {costo}" + " " * (33-16-len(str(costo))) + "|")
+        print("|================================|")
+        print("| 1. Generar instrucciones en consola")
+        print("| 2. Generar instrucciones en XML")
+        print("|================================|")
+        option = input("Ingrese una Opción: ")
+        if not option.isdigit():
+            option = -1
+        option = int(option)
+        match option:
+            case 1:
+                generar_instrucciones_consola(patron_viejo, patron_nuevo)
+                pass
+            case 2:
+                generar_instrucciones_xml(patron_viejo, patron_nuevo)
+                pass
+            case _:
+                input("\n[✗] Opción no valida!"
+                      "\nPresione una tecla para continuar...\n\n")
+
+def algoritmo_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
+    return 0
+
+def generar_instrucciones_consola(patron_viejo: Patron, patron_nuevo: Patron):
+    pass
+
+def generar_instrucciones_xml(patron_viejo: Patron, patron_nuevo: Patron):
+    pass
+
+
 def cargar_xml(path):
     global lista_pisos
     global piso_seleccionado
     global patron_seleccionado
-    
+
     lista_pisos.vaciar()
     piso_seleccionado = None
     patron_seleccionado = None
