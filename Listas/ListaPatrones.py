@@ -28,6 +28,7 @@ class ListaPatrones:
         self.ordenar()
         nodo_actual: Nodo = self.puntero
         index = 0
+        print("| Lista de Patrones:")
         while nodo_actual != None:
             obj_nodo: Patron = nodo_actual.objeto
             print(f"| {index+1}. {obj_nodo.codigo}")

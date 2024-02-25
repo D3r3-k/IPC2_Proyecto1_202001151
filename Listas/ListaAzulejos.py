@@ -50,6 +50,16 @@ class ListaAzulejos:
                 return nodo_actual
             nodo_actual = nodo_actual.siguiente
         return None
+    
+    def buscar_por_indice(self, indice: int):
+        nodo_actual = self.puntero
+        contador = 0
+        while nodo_actual:
+            if contador == indice:
+                return nodo_actual.objeto.color
+            contador += 1
+            nodo_actual = nodo_actual.siguiente
+        return None
 
     def __len__(self):
         nodo_actual = self.puntero

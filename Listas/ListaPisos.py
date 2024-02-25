@@ -20,14 +20,13 @@ class ListaPisos:
         nodo_actual: Nodo = self.puntero
         while nodo_actual != None:
             obj_nodo: Piso = nodo_actual.objeto
-            print(f"Nombre: {obj_nodo.nombre}")
-            print(f"Filas: {obj_nodo.filas}")
-            print(f"Columnas: {obj_nodo.columnas}")
-            print(f"Precio por Voltear: {obj_nodo.precio_voltear}")
-            print(f"Precio por Intercambiar: {obj_nodo.precio_intercambiar}")
-            print(f"Lista de Patrones:")
+            print(f"[>]========================================[<]")
+            print(f"| Nombre: {obj_nodo.nombre}")
+            print(f"| Filas: {obj_nodo.filas}       Columnas: {obj_nodo.columnas}")
+            print(f"| > Precio por Voltear: {obj_nodo.precio_voltear}")
+            print(f"| > Precio por Intercambiar: {obj_nodo.precio_intercambiar}")
             obj_nodo.lista_patrones.ordenar()
-            obj_nodo.lista_patrones.imprimir()
+            obj_nodo.lista_patrones.listar_patrones(obj_nodo.columnas)
             nodo_actual = nodo_actual.siguiente
         if self.puntero is None:
             input("\nNo hay pisos cargados"

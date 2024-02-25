@@ -1,6 +1,7 @@
 # OTROS
 from xml.dom import minidom
 import os
+from Graficar import *
 # LISTAS
 from Listas.ListaPisos import ListaPisos
 from Listas.ListaPatrones import ListaPatrones
@@ -97,19 +98,17 @@ def menu_seleccionar_piso():
             print("|======[ <OPCIONES DE PATRON> ]=======|")
             print("| 1. Mostrar gráficamente el patron   |")
             print("| 2. Seleccionar un nuevo patron      |")
-            print("| 3. Seleccionar un nuevo piso        |")
-            print("| 4. Regresar                         |")
+            print("| 3. Regresar                         |")
             print("|=====================================|")
             option = input("Ingrese una Opción: ")
             match option:
                 case "1":
+                    graficar_patron(piso_seleccionado, patron_seleccionado)
                     pass
                 case "2":
                     menu_seleccionar_patron()
-                case "3":
-                    seleccionar_nuevo_piso()
                     pass
-                case "4":
+                case "3":
                     return
                 case _:
                     input("\n[✗] Opción no valida!"
@@ -173,13 +172,6 @@ def menu_seleccionar_patron():
     else:
         input("\n[✗] No se ha seleccionado un piso!"
               "\nPresione una tecla para continuar...\n\n")
-
-def seleccionar_nuevo_piso():
-    global piso_seleccionado
-    global patron_seleccionado
-    piso_seleccionado = None
-    patron_seleccionado = None
-    menu_seleccionar_piso()
 
 def cargar_xml(path):
     global lista_pisos
