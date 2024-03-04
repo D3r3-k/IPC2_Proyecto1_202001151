@@ -174,7 +174,8 @@ def menu_seleccionar_patron(cambiar_patron: bool = False):
                               "\nPresione una tecla para continuar...\n\n")
                         return
                     patron_seleccionado = temp_nuevo_patron
-                    input(f"\n[✓] Patrón seleccionado: {patron_seleccionado.codigo}")
+                    input(f"\n[✓] Patrón seleccionado: {
+                          patron_seleccionado.codigo}")
                     if cambiar_patron:
                         menu_cambiar_patron(temp_patron, temp_nuevo_patron)
                     return
@@ -189,41 +190,79 @@ def menu_seleccionar_patron(cambiar_patron: bool = False):
 def menu_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
     global piso_seleccionado
     global patron_seleccionado
+    try:
+        costo = algoritmo_cambiar_patron(patron_viejo, patron_nuevo)
+        while True:
+            limpiar()
+            print("|======[ <CAMBIAR PATRON> ]===========|")
+            print(f"| Actual: [{patron_viejo.codigo}]" +
+                  " " * (39-13-len(patron_viejo.codigo)) + "|")
+            print(f"| Nuevo: [{patron_nuevo.codigo}]" + " " *
+                  (39-12-len(patron_nuevo.codigo)) + "|")
+            print("|=====================================|")
+            print(f"| Costo mínimo: {costo}" + " " *
+                  (38-16-len(str(costo))) + "|")
+            print("|=====================================|")
+            print("| 1. Generar instrucciones en consola")
+            print("| 2. Generar instrucciones en XML")
+            print("| 3. Salir")
+            print("|=====================================|")
+            option = input("Ingrese una Opción: ")
+            if not option.isdigit():
+                option = -1
+            option = int(option)
+            match option:
+                case 1:
+                    generar_instrucciones_consola(patron_viejo, patron_nuevo)
+                    pass
+                case 2:
+                    generar_instrucciones_xml(patron_viejo, patron_nuevo)
+                    pass
+                case 3:
+                    return
+                case _:
+                    input("\n[✗] Opción no valida!"
+                          "\nPresione una tecla para continuar...\n\n")
+    except Exception as error:
+        input(f"\nError: {error}"
+              "\nPresione una tecla para continuar...\n\n")
+        return
 
-    costo = algoritmo_cambiar_patron(patron_viejo, patron_nuevo)
-    while True:
-        limpiar()
-        print("|======[ <CAMBIAR PATRON> ]======|")
-        print(f"| Actual: [{patron_viejo.codigo}]" +
-              " " * (34-13-len(patron_viejo.codigo)) + "|")
-        print(f"| Nuevo: [{patron_nuevo.codigo}]" + " " *
-              (34-12-len(patron_nuevo.codigo)) + "|")
-        print("|================================|")
-        print(f"| Costo mínimo: {costo}" + " " * (33-16-len(str(costo))) + "|")
-        print("|================================|")
-        print("| 1. Generar instrucciones en consola")
-        print("| 2. Generar instrucciones en XML")
-        print("|================================|")
-        option = input("Ingrese una Opción: ")
-        if not option.isdigit():
-            option = -1
-        option = int(option)
-        match option:
-            case 1:
-                generar_instrucciones_consola(patron_viejo, patron_nuevo)
-                pass
-            case 2:
-                generar_instrucciones_xml(patron_viejo, patron_nuevo)
-                pass
-            case _:
-                input("\n[✗] Opción no valida!"
-                      "\nPresione una tecla para continuar...\n\n")
 
 def algoritmo_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
-    return 0
+    global piso_seleccionado
+    if len(patron_viejo.lista_azulejos) != len(patron_nuevo.lista_azulejos):
+        raise Exception("Los patrones no tienen la misma cantidad de azulejos!")
+    costo = 0
+    blancas_viejas = patron_viejo.lista_azulejos.cantidad_azulejos("B")
+    negras_viejas = patron_viejo.lista_azulejos.cantidad_azulejos("N")
+    blancas_nuevas = patron_nuevo.lista_azulejos.cantidad_azulejos("B")
+    negras_nuevas = patron_nuevo.lista_azulejos.cantidad_azulejos("N")
+
+    if blancas_viejas == blancas_nuevas and negras_viejas == negras_nuevas:
+        input("Se pueden solo intercambiar los azulejos")
+        costo = patron_viejo.lista_azulejos.intercambiar_azulejos(patron_nuevo.lista_azulejos, piso_seleccionado.precio_intercambiar, piso_seleccionado.precio_voltear)
+    else:
+        input("Se pueden voltear e intercambiar los azulejos")
+        costo = patron_viejo.lista_azulejos.intercambiar_azulejos(patron_nuevo.lista_azulejos, piso_seleccionado.precio_intercambiar, piso_seleccionado.precio_voltear)
+
+
+
+
+    limpiar()
+    print("|======[ <CAMBIAR PATRON> ]======|")
+    print(blancas_viejas, negras_viejas)
+    patron_viejo.lista_azulejos.imprimir_patron(piso_seleccionado.columnas)
+    print("|-----------------------------------------")
+    print(blancas_nuevas, negras_nuevas)
+    patron_nuevo.lista_azulejos.imprimir_patron(piso_seleccionado.columnas)
+    input("\nPresione una tecla para continuar...")
+    return costo
+
 
 def generar_instrucciones_consola(patron_viejo: Patron, patron_nuevo: Patron):
     pass
+
 
 def generar_instrucciones_xml(patron_viejo: Patron, patron_nuevo: Patron):
     pass

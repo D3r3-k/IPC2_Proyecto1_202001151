@@ -1,7 +1,6 @@
 import graphviz
 from Clases.Piso import Piso
 from Clases.Patron import Patron
-from Clases.Azulejo import Azulejo
 
 
 def graficar_patron(Piso: Piso, Patron: Patron):

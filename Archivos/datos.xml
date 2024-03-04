@@ -21,10 +21,10 @@
         <S>1</S>
         <patrones>
             <patron codigo="cod21">
-                BNNNBNBBB
+                NNNBBNBBB
             </patron>
             <patron codigo="cod22">
-                BBBBNBBBN
+                BBBBNNNBN
             </patron>
         </patrones>
     </piso>
