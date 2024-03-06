@@ -191,7 +191,11 @@ def menu_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
     global piso_seleccionado
     global patron_seleccionado
     try:
-        costo = algoritmo_cambiar_patron(patron_viejo, patron_nuevo)
+        costo = patron_viejo.lista_azulejos.intercambiar(piso_seleccionado.filas,
+                                                         piso_seleccionado.columnas,
+                                                         piso_seleccionado.precio_intercambiar,
+                                                         piso_seleccionado.precio_voltear,
+                                                         patron_nuevo.lista_azulejos)
         while True:
             limpiar()
             print("|======[ <CAMBIAR PATRON> ]===========|")
@@ -204,8 +208,7 @@ def menu_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
                   (38-16-len(str(costo))) + "|")
             print("|=====================================|")
             print("| 1. Generar instrucciones en consola")
-            print("| 2. Generar instrucciones en XML")
-            print("| 3. Salir")
+            print("| 2. Salir")
             print("|=====================================|")
             option = input("Ingrese una Opción: ")
             if not option.isdigit():
@@ -216,9 +219,6 @@ def menu_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
                     generar_instrucciones_consola(patron_viejo, patron_nuevo)
                     pass
                 case 2:
-                    generar_instrucciones_xml(patron_viejo, patron_nuevo)
-                    pass
-                case 3:
                     return
                 case _:
                     input("\n[✗] Opción no valida!"
@@ -229,44 +229,8 @@ def menu_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
         return
 
 
-def algoritmo_cambiar_patron(patron_viejo: Patron, patron_nuevo: Patron):
-    global piso_seleccionado
-    if len(patron_viejo.lista_azulejos) != len(patron_nuevo.lista_azulejos):
-        raise Exception("Los patrones no tienen la misma cantidad de azulejos!")
-    costo = 0
-    blancas_viejas = patron_viejo.lista_azulejos.cantidad_azulejos("B")
-    negras_viejas = patron_viejo.lista_azulejos.cantidad_azulejos("N")
-    blancas_nuevas = patron_nuevo.lista_azulejos.cantidad_azulejos("B")
-    negras_nuevas = patron_nuevo.lista_azulejos.cantidad_azulejos("N")
-
-    if blancas_viejas == blancas_nuevas and negras_viejas == negras_nuevas:
-        input("Se pueden solo intercambiar los azulejos")
-        costo = patron_viejo.lista_azulejos.intercambiar_azulejos(patron_nuevo.lista_azulejos, piso_seleccionado.precio_intercambiar, piso_seleccionado.precio_voltear)
-    else:
-        input("Se pueden voltear e intercambiar los azulejos")
-        costo = patron_viejo.lista_azulejos.intercambiar_azulejos(patron_nuevo.lista_azulejos, piso_seleccionado.precio_intercambiar, piso_seleccionado.precio_voltear)
-
-
-
-
-    limpiar()
-    print("|======[ <CAMBIAR PATRON> ]======|")
-    print(blancas_viejas, negras_viejas)
-    patron_viejo.lista_azulejos.imprimir_patron(piso_seleccionado.columnas)
-    print("|-----------------------------------------")
-    print(blancas_nuevas, negras_nuevas)
-    patron_nuevo.lista_azulejos.imprimir_patron(piso_seleccionado.columnas)
-    input("\nPresione una tecla para continuar...")
-    return costo
-
-
 def generar_instrucciones_consola(patron_viejo: Patron, patron_nuevo: Patron):
-    pass
-
-
-def generar_instrucciones_xml(patron_viejo: Patron, patron_nuevo: Patron):
-    pass
-
+    patron_viejo.lista_azulejos.instrucciones(patron_nuevo.lista_azulejos)
 
 def cargar_xml(path):
     global lista_pisos
@@ -292,15 +256,24 @@ def cargar_xml(path):
 
         patrones_tag = piso.getElementsByTagName("patrones")[0]
         patrones = patrones_tag.getElementsByTagName("patron")
+
         for patron in patrones:
             # Datos de los patrones
             _codigo = str(patron.getAttribute("codigo")).strip()
             azulejos = str(patron.firstChild.data).strip()
 
+            fila = 0
+            columna = 0
             _lista_azulejos = ListaAzulejos()
             for char in azulejos:
+                if fila == _filas:
+                    break
+                _azulejo = Azulejo(fila, columna, char)
+                columna += 1
+                if columna == _columnas:
+                    fila += 1
+                    columna = 0
                 # Datos de los azulejos
-                _azulejo = Azulejo(char)
                 _lista_azulejos.insertar(_azulejo)
             nuevo_patron = Patron(_codigo, _lista_azulejos)
             _lista_patrones.insertar(nuevo_patron)

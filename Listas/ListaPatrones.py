@@ -39,8 +39,6 @@ class ListaPatrones:
             input("\nNo hay patrones cargados"
                   "\nPresione una tecla para continuar...\n\n")
 
-    def eliminar(self, valor):
-        pass
 
     def buscar(self, nombre: str):
         nodo_actual = self.puntero

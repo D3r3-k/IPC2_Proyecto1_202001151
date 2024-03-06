@@ -1,13 +1,13 @@
 digraph {
-	fontname=arial fontsize=14 label="Piso: ejemplo01 - Patron: cod12" labelloc=t nodesep=0.1 ranksep=0.1
-	00 [label=N color=white fillcolor=black fontcolor=white shape=square style=filled]
-	01 [label=B fillcolor=white shape=square style=filled]
-	02 [label=N color=white fillcolor=black fontcolor=white shape=square style=filled]
-	03 [label=B fillcolor=white shape=square style=filled]
+	fontname=arial fontsize=14 label="Piso: ejemplo01 - Patron: cod11" labelloc=t nodesep=0.1 ranksep=0.1
+	00 [label=B fillcolor=white shape=square style=filled]
+	01 [label=N color=white fillcolor=black fontcolor=white shape=square style=filled]
+	02 [label=B fillcolor=white shape=square style=filled]
+	03 [label=N color=white fillcolor=black fontcolor=white shape=square style=filled]
 	10 [label=B fillcolor=white shape=square style=filled]
 	11 [label=B fillcolor=white shape=square style=filled]
 	12 [label=B fillcolor=white shape=square style=filled]
-	13 [label=B fillcolor=white shape=square style=filled]
+	13 [label=N color=white fillcolor=black fontcolor=white shape=square style=filled]
 	00 -> 10 [style=invis]
 	01 -> 11 [style=invis]
 	02 -> 12 [style=invis]

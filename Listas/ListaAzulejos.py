@@ -39,11 +39,11 @@ class ListaAzulejos:
             nodo_actual = nodo_actual.siguiente
         print(texto)
 
-    def buscar(self, nombre: str):
+    def buscar(self, color: str):
         nodo_actual = self.puntero
         while nodo_actual:
             objeto_nodo: Azulejo = nodo_actual.objeto
-            if objeto_nodo.nombre == nombre:
+            if objeto_nodo.color == color:
                 return nodo_actual
             nodo_actual = nodo_actual.siguiente
         return None
@@ -55,6 +55,15 @@ class ListaAzulejos:
             if contador == indice:
                 return nodo_actual.objeto.color
             contador += 1
+            nodo_actual = nodo_actual.siguiente
+        return None
+    
+    def buscar_por_coordenadas(self, fila: int, columna: int):
+        nodo_actual = self.puntero
+        while nodo_actual:
+            objeto_nodo: Azulejo = nodo_actual.objeto
+            if objeto_nodo.fila == fila and objeto_nodo.columna == columna:
+                return objeto_nodo
             nodo_actual = nodo_actual.siguiente
         return None
 
@@ -75,46 +84,94 @@ class ListaAzulejos:
             contador += 1
             nodo_actual = nodo_actual.siguiente
         return contador
-
-    def voltear(self, indice: int):
-        nodo_actual = self.puntero
-        contador = 0
-        while nodo_actual:
-            objeto_nodo: Azulejo = nodo_actual.objeto
-            if indice == contador:
-                return objeto_nodo.voltear()
-            nodo_actual = nodo_actual.siguiente
-            contador += 1
-        return None
     
-    def intercambiar(self, indice: int, nuevo_color: str):
+    def cambiar_siguiente(self):
         nodo_actual = self.puntero
-        contador = 0
         while nodo_actual:
             objeto_nodo: Azulejo = nodo_actual.objeto
-            if indice == contador:
-                return objeto_nodo.intercambiar(nuevo_color)
+            if objeto_nodo.cambiado:
+                nodo_actual = nodo_actual.siguiente
+            else:
+                objeto_nodo.cambiado = True
+                break
+    
+    def cambiar_todos(self, parametro: bool):
+        nodo_actual = self.puntero
+        while nodo_actual:
+            objeto_nodo: Azulejo = nodo_actual.objeto
+            objeto_nodo.cambiado = parametro
             nodo_actual = nodo_actual.siguiente
-            contador += 1
-        return None
 
-    def intercambiar_azulejos(self, nuevo_patron, precio_voltear: int, precio_intercambiar: int):
-        total = 0
-        indice = 0
-        n_azulejo_actual: ListaAzulejos = nuevo_patron.buscar_por_indice(indice)
-        v_azulejo_actual: ListaAzulejos = self.buscar_por_indice(indice)
-        while n_azulejo_actual and v_azulejo_actual:
-            if n_azulejo_actual != v_azulejo_actual:
-                input(f"indice: {indice} - Intercambiando {n_azulejo_actual} por {v_azulejo_actual}")
-                if precio_voltear < precio_intercambiar:
-                    input(f"indice: {indice} - Volteando {v_azulejo_actual}")
-                    self.voltear(indice)
-                    total += precio_voltear
+    def intercambiar(self, filas: int, columnas: int, precio_intercambio: int, precio_voltear: int, nueva_lista: 'ListaAzulejos'):
+        # NUEVA LISTA SOLO SIRVE PARA REFERENCIA DE LOS AZULEJOS
+        # Y PODER CREAR EL NUEVO PATRON
+        self.cambiar_todos(False)
+        precio_total = 0
+        nodo_actual: 'ListaAzulejos' = self.puntero
+        nodo_nuevo: 'ListaAzulejos' = nueva_lista.puntero
+        while nodo_actual:
+            objeto_nodo: Azulejo = nodo_actual.objeto
+            objeto_nuevo: Azulejo = nodo_nuevo.objeto
+            # print(f"[{objeto_nodo.fila},{objeto_nodo.columna}] Color: {objeto_nodo.color}-{objeto_nodo.cambiado}   |   [{objeto_nuevo.fila},{objeto_nuevo.columna}] Color: {objeto_nuevo.color}-{objeto_nodo.cambiado}")
+
+            if objeto_nodo.cambiado:
+                pass
+            else:
+                if objeto_nodo.color == objeto_nuevo.color:
+                    objeto_nodo.cambiado = True
+                    # input(f"[{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
                 else:
-                    input(f"indice: {indice} - Intercambiando {n_azulejo_actual} por {v_azulejo_actual}")
-                    self.intercambiar(indice, n_azulejo_actual)
-                    total += precio_intercambiar
-            indice += 1
-            n_azulejo_actual = nuevo_patron.buscar_por_indice(indice)
-            v_azulejo_actual = self.buscar_por_indice(indice)
-        return total
+                    if objeto_nodo.color == "B" and objeto_nuevo.color == "N":
+                        objeto_nodo.cambiado = True
+                        self.cambiar_siguiente()
+                        precio_total += precio_intercambio
+                        objeto_nodo.intercambiar(objeto_nuevo)
+                        # input(f"Intercambio [{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+                    elif objeto_nodo.color == "N" and objeto_nuevo.color == "B":
+                        objeto_nodo.cambiado = True
+                        self.cambiar_siguiente()
+                        precio_total += precio_intercambio
+                        objeto_nodo.intercambiar(objeto_nuevo)
+                        # input(f"Intercambio [{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+                    else:
+                        precio_total += precio_voltear
+                        objeto_nodo.voltear()
+                        # input(f"Volteo [{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+                        
+
+
+            nodo_actual = nodo_actual.siguiente
+            nodo_nuevo = nodo_nuevo.siguiente
+        # input(f"Precio Total: {precio_total}")
+        return precio_total
+    
+    def instrucciones(self, nueva_lista: 'ListaAzulejos'):
+        self.cambiar_todos(False)
+        nodo_actual: 'ListaAzulejos' = self.puntero
+        nodo_nuevo: 'ListaAzulejos' = nueva_lista.puntero
+        while nodo_actual:
+            objeto_nodo: Azulejo = nodo_actual.objeto
+            objeto_nuevo: Azulejo = nodo_nuevo.objeto
+            if objeto_nodo.cambiado:
+                pass
+            else:
+                if objeto_nodo.color == objeto_nuevo.color:
+                    objeto_nodo.cambiado = True
+                    # input(f"[{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+                else:
+                    if objeto_nodo.color == "B" and objeto_nuevo.color == "N":
+                        objeto_nodo.cambiado = True
+                        self.cambiar_siguiente()
+                        objeto_nodo.intercambiar(objeto_nuevo)
+                        input(f"Intercambiar [{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+                    elif objeto_nodo.color == "N" and objeto_nuevo.color == "B":
+                        objeto_nodo.cambiado = True
+                        self.cambiar_siguiente()
+                        objeto_nodo.intercambiar(objeto_nuevo)
+                        input(f"Intercambiar [{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+                    else:
+                        objeto_nodo.voltear()
+                        input(f"Voltear [{objeto_nodo.fila},{objeto_nodo.columna}] = [{objeto_nuevo.fila},{objeto_nuevo.columna}]")
+            nodo_actual = nodo_actual.siguiente
+            nodo_nuevo = nodo_nuevo.siguiente
+
